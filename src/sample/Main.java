@@ -1,5 +1,6 @@
 package sample;
 
+import com.mpatric.mp3agic.Mp3File;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableArray;
@@ -14,8 +15,13 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+import jdk.nashorn.internal.runtime.URIUtils;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -32,24 +38,22 @@ public class Main extends Application {
 
     private final String musicPath = "D:/MUSIK/";
 
-    private static File selected;
+    private static Mp3File selected;
 
+    private static Duration currDurr;
 
     @Override
     public void start(Stage stage) throws Exception{
 
 
         System.out.println("MAIN INIT!");
-        /*media = new Media("file:///D:/MUSIK/Larry%20Graham-%20I%20Feel%20Good%20(1982).mp3");
-        mediaPlayer = new MediaPlayer(media);
-        */
+
+        // Load our Layout, create the scene and set titles and visibility
         Parent root = FXMLLoader.load(getClass().getResource("layout.fxml"));
         Scene scene = new Scene(root, 800, 600);
-
-
-
         stage.setTitle("TouchMediaPlayer");
         stage.setScene(scene);
+        //stage.setFullScreen(true);
         stage.show();
     }
 
@@ -58,25 +62,39 @@ public class Main extends Application {
         launch(args);
     }
 
-    public static void setSelectedAndPlay(File f){
+
+    public static void setSelectedAndPlay(Mp3File f){
             selected = f;
+            System.out.println("Selected: "+selected);
             playSong();
     }
 
-    public static void setSelected(File f){
-          selected = f;
+
+    public static void setSelected(Mp3File f){
+         selected = f;
+        System.out.println("Selected: "+selected);
     }
 
     private static void playSong(){
-
-        // hent den første fil i listen!
+        // check to see that a
         if(selected != null){
             bIsPlaying = true;
-            File toPlay = selected;
-            media = new Media(toPlay.toURI().toString());
+            Mp3File toPlay = selected;
+            File f = new File(toPlay.getFilename());
+            media = new Media(f.toURI().toString());
             mediaPlayer = new MediaPlayer(media);
             mediaPlayer.play();
         }
+    }
+
+    public static void pausePlayer(){
+        currDurr = mediaPlayer.getCurrentTime();
+        mediaPlayer.pause();
+    }
+
+    public static void unpausePlayer(){
+        mediaPlayer.setStartTime(currDurr);
+        mediaPlayer.play();
     }
 
     public static boolean isPlaying(){

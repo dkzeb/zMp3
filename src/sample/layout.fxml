@@ -14,11 +14,11 @@
    <top>
       <HBox alignment="CENTER" prefHeight="44.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" text="Prev" textAlignment="CENTER" />
-            <Button mnemonicParsing="false" text="Stop" textAlignment="CENTER" />
-            <Button mnemonicParsing="false" text="Play/Pause" textAlignment="CENTER" />
-            <Button mnemonicParsing="false" text="Next" textAlignment="CENTER" />
-            <Button mnemonicParsing="false" text="Shuffle" textAlignment="CENTER" />
+            <Button mnemonicParsing="false" fx:id="prevBtn" text="Prev" textAlignment="CENTER" />
+            <Button mnemonicParsing="false" fx:id="stopBtn"  text="Stop" textAlignment="CENTER" />
+            <Button mnemonicParsing="false" fx:id="startBtn"  text="Play/Pause" textAlignment="CENTER" />
+            <Button mnemonicParsing="false" fx:id="nextBtn"  text="Next" textAlignment="CENTER" />
+            <Button mnemonicParsing="false" fx:id="shuffleBtn"  text="Shuffle" textAlignment="CENTER" />
          </children>
       </HBox>
    </top>
