@@ -6,31 +6,29 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.media.MediaPlayer;
+import javafx.scene.text.Text;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.ResourceBundle;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
-/**
- * Created by sthaz_000 on 15-06-2015.
- */
 public class UIController {
 
     // fxml elements; tracklist and control buttons!
     @FXML private ListView<String> trackList;
-    @FXML private Button stopBtn, startBtn, shuffleBtn, prevBtn, nextBtn;
+    @FXML private Button stopBtn, startBtn, prevBtn, shuffleBtn, nextBtn;
 
     // ArrayList for songs, and tmp path for dev purposes! :)
-    private ArrayList<Mp3File> soundFiles = new ArrayList<Mp3File>();
+    private static ArrayList<Mp3File> soundFiles = new ArrayList<Mp3File>();
     private ArrayList<String> songTitles = new ArrayList<String>();
     private final String musicPath = "D:/MUSIK/";
 
@@ -41,7 +39,9 @@ public class UIController {
 
     private String STATE = "INIT";
 
-    private int trackIndex = 0;
+    private static int trackIndex = 0;
+    private static int totalNrOfTracks = 0;
+    private static boolean shuffleMode = false;
 
     @FXML void initialize() {
 
@@ -91,6 +91,7 @@ public class UIController {
 
                       // we add the title to our song titles list!
                       songTitles.add(trackArtist+" - "+trackTitle);
+                      totalNrOfTracks = totalNrOfTracks+1;
                    // exception catches :) DefProg 4tw;
                   } catch (UnsupportedTagException e){
                     e.printStackTrace();
@@ -118,11 +119,13 @@ public class UIController {
                     public void handle(MouseEvent event) {
                         int selected = trackList.getSelectionModel().getSelectedIndex();
                         Mp3File selectedFile = soundFiles.get(selected);
+                        initSelect = selectedFile;
                         trackIndex = selected;
                         if (event.getClickCount() == 2 && !event.isConsumed()) {
-                            if (Main.isPlaying()) {
+                            if (Main.isPlaying() || STATE.equals("PLAYING")) {
                                 Main.getMP().stop();
                             }
+                            STATE = "PLAYING";
                             event.consume();
                             Main.setSelectedAndPlay(selectedFile);
                         } else {
@@ -165,7 +168,7 @@ public class UIController {
         startBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(initSelect == null || STATE.equals("INIT")){
+                if(initSelect == null || STATE.equals("INIT") && !STATE.equals("PLAYING")){
                     initSelect = soundFiles.get(0);
                     STATE = "PLAYING";
                     Main.setSelectedAndPlay(initSelect);
@@ -190,7 +193,12 @@ public class UIController {
         nextBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                int nxt = trackIndex+1;
+                int nxt;
+                if(shuffleMode){
+                    nxt = randInt(0, totalNrOfTracks-1);
+                } else {
+                    nxt = trackIndex + 1;
+                }
                 trackIndex = nxt;
                 if(STATE.equals("STOPPED")){
                     Main.setSelected(soundFiles.get(trackIndex));
@@ -201,6 +209,27 @@ public class UIController {
                 }
             }
         });
+
+        shuffleBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                shuffleMode ^= true;
+                System.out.println("Shuffle mode is: "+shuffleMode);
+                if(shuffleMode){
+                    shuffleBtn.setStyle("-fx-background-image: url('/res/shuffle_icon_active.png'); -fx-background-repeat: no-repeat; -fx-background-position: center; -fx-background-size: 70% auto");
+                } else {
+                    shuffleBtn.setStyle("-fx-background-image: url('/res/shuffle_icon.png'); -fx-background-repeat: no-repeat; -fx-background-position: center; -fx-background-size: 65% auto");
+                }
+            }
+        });
+
+        // button graphics
+        prevBtn.setStyle("-fx-background-image: url('/res/prev_icon.png'); -fx-padding: 5px; -fx-background-repeat: no-repeat; -fx-background-position: center; -fx-background-size: 65% auto");
+        startBtn.setStyle("-fx-background-image: url('/res/playpause_icon.png'); -fx-padding: 5px; -fx-background-repeat: no-repeat; -fx-background-position: center; -fx-background-size: 65% auto");
+        nextBtn.setStyle("-fx-background-image: url('/res/next_icon.png'); -fx-padding: 5px; -fx-background-repeat: no-repeat; -fx-background-position: center; -fx-background-size: 65% auto");
+        stopBtn.setStyle("-fx-background-image: url('/res/stop_icon.png'); -fx-padding: 5px; -fx-background-repeat: no-repeat; -fx-background-position: center; -fx-background-size: 65% auto");
+        shuffleBtn.setStyle("-fx-background-image: url('/res/shuffle_icon.png');  -fx-padding: 5px; -fx-background-repeat: no-repeat; -fx-background-position: center; -fx-background-size: 65% auto");
+
 
         prevBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -220,6 +249,21 @@ public class UIController {
             }
         });
 
+
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+               // timeTxt = new Label("TIME IS ON!");
+
+                //if(Main.getTime() != null && timeTxt != null)
+                  //  timeTxt.setText(Main.getTime().toString());
+            }
+        },0, 1);
+
+
+
     }
 
     // helper function to id tags in mp3 files!
@@ -235,6 +279,31 @@ public class UIController {
 
         return tag;
 
+    }
+
+    public static void playNxtTrack(){
+        int nxt;
+        if (shuffleMode) {
+            nxt = randInt(0, totalNrOfTracks - 1);
+        } else {
+            nxt = trackIndex + 1;
+        }
+        trackIndex = nxt;
+
+        Main.setSelectedAndPlay(soundFiles.get(nxt));
+    }
+
+    public static int randInt(int min, int max) {
+
+        // NOTE: Usually this should be a field rather than a method
+        // variable so that it is not re-seeded every call.
+        Random rand = new Random();
+
+        // nextInt is normally exclusive of the top value,
+        // so add 1 to make it inclusive
+        int randomNum = rand.nextInt((max - min) + 1) + min;
+
+        return randomNum;
     }
 
 }
