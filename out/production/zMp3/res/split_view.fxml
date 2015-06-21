@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="code.UIControllerPlaylist">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <ListView fx:id="libList" prefHeight="200.0" prefWidth="200.0">
+         <effect>
+            <InnerShadow />
+         </effect>
+      </ListView>
+      <ListView fx:id="playList" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2">
+         <effect>
+            <InnerShadow />
+         </effect>
+      </ListView>
+      <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
+         <children>
+            <VBox alignment="CENTER" prefHeight="90.0" prefWidth="200.0">
+               <children>
+                   <fx:include source="media_display.fxml" />
+                   <Label fx:id="artistTitleText" text="Artist Title" />
+                   <Label fx:id="albumText" text="Album" />
+               </children>
+            </VBox>
+            <StackPane>
+               <children>
+                  <ImageView fx:id="albumArt" fitHeight="173.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                     <effect>
+                        <Glow />
+                     </effect>
+                  </ImageView>
+               </children>
+            </StackPane>
+            <VBox>
+               <VBox.margin>
+                  <Insets bottom="50.0" />
+               </VBox.margin>
+               <children>
+                  <fx:include source="slider_display.fxml" />
+                  <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                         <Button fx:id="prevBtn" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="" textAlignment="CENTER" />
+                         <Button fx:id="stopBtn" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="" textAlignment="CENTER" />
+                         <Button fx:id="startBtn" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="" textAlignment="CENTER" />
+                         <Button fx:id="nextBtn" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="" textAlignment="CENTER" />
+                         <Button fx:id="shuffleBtn" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="" textAlignment="CENTER" />
+                        <Slider orientation="VERTICAL" fx:id="volumeSlider" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </children>
+</GridPane>

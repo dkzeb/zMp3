@@ -1,0 +1,32 @@
+/* Stylesheet to skin our Mp3 Player - and make it nice and themeable :D */
+
+.root {
+    -fx-background: rgb(200, 200, 200);
+}
+
+#libList {
+    -fx-background-color: transparent;
+    -fx-fit-to-width: true;
+}
+
+#libList .scroll-bar .track {
+    -fx-background-color: transparent;
+}
+
+.list-cell {
+    -fx-pref-height: 65px;
+    -fx-font-size: 18px;
+    -fx-background-color: transparent;
+}
+
+.list-cell:selected {
+    -fx-background-color: lightblue;
+}
+
+.button{
+    -fx-background-color: transparent;
+}
+
+#timeText {
+    -fx-font-size: 36px;
+}
