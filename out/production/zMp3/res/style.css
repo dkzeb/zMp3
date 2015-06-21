@@ -30,3 +30,15 @@
 #timeText {
     -fx-font-size: 36px;
 }
+
+#timeSlider .thumb {
+    -fx-pref-height: 5px;
+    -fx-pref-width: 15px;
+    -fx-background-radius: 0;
+}
+
+#volumeSlider .thumb {
+    -fx-pref-height: 10px;
+    -fx-pref-width: 10px;
+    -fx-padding: 10px;
+}

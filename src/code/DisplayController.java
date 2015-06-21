@@ -63,7 +63,7 @@ public class DisplayController {
                         trackTime = secondsLeft;
                         double sliderVal = passedSeconds / secondsLeft;
 
-                        System.out.println(sliderVal);
+                        //System.out.println(sliderVal);
 
                         if (timeSlider != null)
                             timeSlider.setValue(sliderVal);

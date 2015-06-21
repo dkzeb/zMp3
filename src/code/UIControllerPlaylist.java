@@ -146,6 +146,7 @@ public class UIControllerPlaylist {
 
                     cell.setOnDragDetected(event -> {
                         if(!cell.isEmpty()){
+                            libList.getSelectionModel().select(cell.getIndex());
                             // the cell is not empty - start a drag event
                             Dragboard db = cell.startDragAndDrop(TransferMode.COPY);
                             ClipboardContent cc = new ClipboardContent();
@@ -298,6 +299,18 @@ public class UIControllerPlaylist {
             // if the playlist is empty - then we remove the stub item on the playlist,
             // add the selected song, and begin playing it.
 
+
+            libList.setOnTouchPressed(new EventHandler<TouchEvent>() {
+                @Override
+                public void handle(TouchEvent event) {
+                    System.out.println("YOU TOUCHED ME!");
+                    if(!event.isConsumed()){
+
+                       System.out.println("You touched "+libList.getSelectionModel().getSelectedIndex());
+                    }
+                }
+            });
+
             libList.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
@@ -330,6 +343,7 @@ public class UIControllerPlaylist {
 
                         // count up our total number of tracks
                         totalNrOfTracks = totalNrOfTracks+1;
+                        event.consume();
 
                     }
                 }
@@ -348,8 +362,9 @@ public class UIControllerPlaylist {
                     if(Main.isPlaying())
                         Main.getMP().stop();
 
-                    trackIndex = playListTrackIndex.get(playList.getSelectionModel().getSelectedIndex());
-                    Main.setSelectedAndPlay(libSoundFiles.get(trackIndex));
+                    trackIndex = playList.getSelectionModel().getSelectedIndex();
+                    System.out.println("Index: "+trackIndex);
+                    Main.setSelectedAndPlay(libSoundFiles.get(playListTrackIndex.get(playList.getSelectionModel().getSelectedIndex())));
                     setupTrackInfo();
                 }
             }
@@ -369,6 +384,7 @@ public class UIControllerPlaylist {
                 @Override
                 public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                     Main.getMP().setVolume(volumeSlider.getValue());
+                    Main.setVolumeVal(volumeSlider.getValue());
                 }
             });
         }
@@ -459,6 +475,7 @@ public class UIControllerPlaylist {
     private void setupTrackInfo(){
         artistTitleText.setText(Main.getMediaInfo("artTrk"));
         albumText.setText(Main.getMediaInfo("album"));
+        albumArt.setImage(Main.getAlbumArt());
     }
 
     // random integer function - which returns a random int

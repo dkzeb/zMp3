@@ -45,6 +45,8 @@ public class Main extends Application {
     private Stage fxStage;
     private static Scene fxScene;
 
+    private static Double globalVolume = 1.0;
+
 
     // KeyListener for the F10 - fullscreen keymode
     private EventHandler<KeyEvent> keyListener = new EventHandler<KeyEvent>(){
@@ -140,6 +142,11 @@ public class Main extends Application {
         System.out.println("Selected: "+selected);
     }
 
+
+    public static void setVolumeVal(Double s){
+        globalVolume = s;
+    }
+
     private static void playSong(){
         // check to see that a
         if(selected != null){
@@ -176,6 +183,7 @@ public class Main extends Application {
                     bIsStopped = true;
                 }
             });
+            mediaPlayer.setVolume(globalVolume);
             mediaPlayer.play();
         }
     }
